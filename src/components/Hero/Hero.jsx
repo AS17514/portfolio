@@ -3,9 +3,9 @@ import { FaChevronDown, FaRegCircle } from 'react-icons/fa'
 import projects from '../../data/projects.json'
 import styles from './Hero.module.css'
 
-const ORBIT_RADIUS = 280
-const CARD_W = 140
-const CARD_H = 210
+const ORBIT_RADIUS = 300
+const CARD_W = 170
+const CARD_H = 255
 const TOTAL_DISPLAY = 5
 const BASE_SPEED = 0.20 // deg/frame (~30s 一圈)
 const MAX_SPEED = 0.80
