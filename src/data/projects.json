@@ -3,6 +3,7 @@
     "id": 1,
     "title": "The Law",
     "subtitle": "回合制策略游戏",
+    "poster": "/portfolio/images/poster.png",
     "thumbnail": "/portfolio/images/project-1-thumb.jpg",
     "video": "",
     "description": "独立完成全部后端逻辑与核心系统的设计与实现，构建了完整的回合制战斗框架。",

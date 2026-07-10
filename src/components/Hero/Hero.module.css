@@ -33,7 +33,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 48px;
   height: 100%;
 }
 
@@ -64,89 +63,73 @@
   text-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
 }
 
-/* ---- 环绕圆环卡牌 ---- */
+/* ---- 行星环轨道 ---- */
 
-.cardRing {
+.orbitRing {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   perspective: 1000px;
-  position: relative;
-  z-index: 1;
+  pointer-events: none;
 }
 
-.card {
-  width: 240px;
-  height: 360px;
-  border-radius: 14px;
-  position: relative;
-  overflow: hidden;
+.orbitStage {
+  width: 0;
+  height: 0;
   transform-style: preserve-3d;
-  animation: ringOrbit 8s ease-in-out infinite;
+  animation: orbitRevolution 30s linear infinite;
+  position: relative;
+}
+
+/* 公转：绕 Y 轴 360° 缓慢旋转 */
+@keyframes orbitRevolution {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+/* ---- 轨道上的单张卡牌 ---- */
+
+.orbitCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  backface-visibility: hidden;
   box-shadow:
-    0 0 40px rgba(74, 144, 217, 0.08),
-    0 20px 60px rgba(0, 0, 0, 0.5);
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(74, 144, 217, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.card:hover {
-  animation-play-state: paused;
-}
-
-.posterImg {
+.orbitCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.cardShine {
+.orbitCardLabel {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    transparent 40%,
-    rgba(74, 144, 217, 0.1) 100%
-  );
-  pointer-events: none;
-}
-
-/* 环绕轨道动画：
-   rotateY 左右旋转 → 形成环状扫过
-   translateZ 前后微推 → 立体深度
-   rotateX 轻微俯仰 → 环的弧度感  */
-@keyframes ringOrbit {
-  0% {
-    transform:
-      perspective(1000px)
-      rotateY(-18deg)
-      rotateX(4deg)
-      translateZ(0);
-    filter: brightness(0.95);
-  }
-  25% {
-    filter: brightness(1.05);
-  }
-  50% {
-    transform:
-      perspective(1000px)
-      rotateY(18deg)
-      rotateX(-4deg)
-      translateZ(10px);
-    filter: brightness(1.05);
-  }
-  75% {
-    filter: brightness(1.05);
-  }
-  100% {
-    transform:
-      perspective(1000px)
-      rotateY(-18deg)
-      rotateX(4deg)
-      translateZ(0);
-    filter: brightness(0.95);
-  }
+  padding: 8px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  text-align: center;
+  letter-spacing: 1px;
 }
 
 /* ---- 滚动箭头 ---- */
