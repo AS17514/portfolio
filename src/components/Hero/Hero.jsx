@@ -131,7 +131,6 @@ export default function Hero() {
                 >
                   {!card.isPlaceholder ? (
                     <>
-                      <div className={styles.realCardAccent} />
                       <img
                         src={card.poster || '/portfolio/images/poster.png'}
                         alt={card.title}
