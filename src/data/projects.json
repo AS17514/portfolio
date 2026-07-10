@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "title": "The Law",
+    "subtitle": "回合制策略游戏",
+    "thumbnail": "",
+    "video": "",
+    "description": "独立完成全部后端逻辑与核心系统的设计与实现，构建了完整的回合制战斗框架。",
+    "responsibilities": [
+      "回合制战斗框架",
+      "DFS 骰子校验系统",
+      "状态机 + 字典注册机制",
+      "多层技能体系"
+    ],
+    "techStack": ["Unity", "C#", "状态模式", "观察者模式"],
+    "github": "https://github.com/AS17514/TheLaw",
+    "detailUrl": "#"
+  }
+]

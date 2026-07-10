@@ -1,0 +1,22 @@
+[
+  {
+    "category": "游戏引擎",
+    "icon": "SiUnity",
+    "items": ["Unity", "C#"]
+  },
+  {
+    "category": "架构设计",
+    "icon": "FaCubes",
+    "items": ["状态模式", "观察者模式", "模板方法", "注册表模式"]
+  },
+  {
+    "category": "算法与逻辑",
+    "icon": "FaBrain",
+    "items": ["DFS 回溯", "骰子校验", "条件匹配", "状态调度"]
+  },
+  {
+    "category": "开发思维",
+    "icon": "FaLightbulb",
+    "items": ["数据定义行为", "根因追溯", "可扩展设计", "解耦优先"]
+  }
+]
