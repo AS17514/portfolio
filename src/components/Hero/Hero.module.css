@@ -86,7 +86,6 @@
   pointer-events: none;
 }
 
-/* 轨道倾斜 */
 .orbitTilt {
   transform-style: preserve-3d;
   transform:
@@ -111,7 +110,7 @@
   border-radius: 10px;
   overflow: hidden;
   will-change: transform, opacity, filter;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backface-visibility: visible;
   pointer-events: none;
 }
@@ -119,7 +118,8 @@
 .orbitCard:not(.placeholderCard) {
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 16px rgba(74, 144, 217, 0.05);
+    0 0 20px rgba(74, 144, 217, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .orbitCardImg {
@@ -146,12 +146,26 @@
   text-overflow: ellipsis;
 }
 
-/* 占位卡牌 */
+/* ---- 占位卡牌 ---- */
+
 .placeholderCard {
   background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(4px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.placeholderInner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderIcon {
+  font-size: 20px;
+  color: rgba(255, 255, 255, 0.12);
 }
 
 /* ---- 滚动箭头 ---- */

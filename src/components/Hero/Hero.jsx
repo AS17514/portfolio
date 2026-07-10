@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react'
-import { FaChevronDown } from 'react-icons/fa'
+import { FaChevronDown, FaRegCircle } from 'react-icons/fa'
 import projects from '../../data/projects.json'
 import styles from './Hero.module.css'
 
@@ -7,9 +7,9 @@ const ORBIT_RADIUS = 280
 const CARD_W = 140
 const CARD_H = 210
 const TOTAL_DISPLAY = 5
-const BASE_SPEED = 0.10 // 默认旋转速度 (deg/frame)
-const MAX_SPEED = 0.50  // 拖拽最高速度
-const DRAG_FACTOR = 0.25 // 拖拽灵敏度
+const BASE_SPEED = 0.20 // deg/frame (~30s 一圈)
+const MAX_SPEED = 0.80
+const DRAG_FACTOR = 0.25
 
 const cardData = []
 for (let i = 0; i < TOTAL_DISPLAY; i++) {
@@ -27,7 +27,6 @@ export default function Hero() {
   const isDragging = useRef(false)
   const lastX = useRef(0)
 
-  // ---- 拖拽交互 ----
   const handlePointerDown = useCallback((e) => {
     isDragging.current = true
     lastX.current = e.clientX
@@ -45,7 +44,6 @@ export default function Hero() {
     isDragging.current = false
   }, [])
 
-  // ---- 动画循环 ----
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
@@ -54,7 +52,6 @@ export default function Hero() {
     const tick = () => {
       if (!running) return
 
-      // 松手后平滑回归默认速度
       if (!isDragging.current) {
         speedRef.current += (BASE_SPEED - speedRef.current) * 0.04
         if (Math.abs(speedRef.current - BASE_SPEED) < 0.002) {
@@ -69,7 +66,12 @@ export default function Hero() {
         const cardAngle = angleRef.current + (360 / TOTAL_DISPLAY) * i
         const rad = (cardAngle * Math.PI) / 180
         const zPos = Math.cos(rad)
-        const opacity = 0.20 + ((zPos + 1) / 2) * 0.65
+        const isPlaceholder = card.classList.contains(styles.placeholderCard)
+
+        // 真实卡牌: 0.35~0.95 | 占位卡: 0.25~0.50（始终可见）
+        const opacity = isPlaceholder
+          ? 0.20 + ((zPos + 1) / 2) * 0.30
+          : 0.35 + ((zPos + 1) / 2) * 0.60
         const scale = 0.85 + ((zPos + 1) / 2) * 0.25
 
         card.style.transform = `
@@ -78,7 +80,7 @@ export default function Hero() {
           scale(${scale})
         `
         card.style.opacity = opacity
-        card.style.filter = `blur(${(1 - scale) * 6}px)`
+        card.style.filter = `blur(${(1 - scale) * 5}px)`
       }
 
       requestAnimationFrame(tick)
@@ -105,7 +107,6 @@ export default function Hero() {
       />
       <div className={styles.overlay} />
 
-      {/* 拖动事件挂在 content 上，用户拖 Hero 任意位置都能转 */}
       <div
         className={styles.content}
         onPointerDown={handlePointerDown}
@@ -113,7 +114,6 @@ export default function Hero() {
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
       >
-        {/* 行星环轨道 */}
         <div className={styles.orbitRing}>
           <div className={styles.orbitTilt}>
             <div className={styles.orbitStage} ref={stageRef}>
@@ -122,7 +122,7 @@ export default function Hero() {
                   key={card.id}
                   className={`${styles.orbitCard} ${card.isPlaceholder ? styles.placeholderCard : ''}`}
                 >
-                  {!card.isPlaceholder && (
+                  {!card.isPlaceholder ? (
                     <>
                       <img
                         src={card.poster || '/portfolio/images/poster.png'}
@@ -131,6 +131,10 @@ export default function Hero() {
                       />
                       <div className={styles.orbitCardLabel}>{card.title}</div>
                     </>
+                  ) : (
+                    <div className={styles.placeholderInner}>
+                      <FaRegCircle className={styles.placeholderIcon} />
+                    </div>
                   )}
                 </div>
               ))}
@@ -138,7 +142,6 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* 中心文字 */}
         <div className={styles.centerColumn}>
           <h1 className={styles.title}>AS</h1>
           <p className={styles.subtitle}>游戏程序 / 技术美术</p>
