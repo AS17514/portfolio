@@ -23,7 +23,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.6);
 }
 
 .content {
@@ -34,29 +34,31 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  gap: 32px;
 }
 
-/* ---- 中央文字（圆柱核心） ---- */
+/* ---- 中心文字 ---- */
 
 .centerColumn {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 2;
+  z-index: 3;
+  margin-top: 40px;
 }
 
 .title {
-  font-size: 96px;
+  font-size: 80px;
   font-weight: 700;
   letter-spacing: 8px;
   line-height: 1.1;
-  text-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
 }
 
 .subtitle {
-  margin-top: 16px;
-  font-size: 20px;
+  margin-top: 12px;
+  font-size: 18px;
   color: var(--color-text-dim);
   font-weight: 400;
   letter-spacing: 4px;
@@ -74,29 +76,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  perspective: 1000px;
+  perspective: 900px;
   pointer-events: none;
+}
+
+/* 轨道倾斜：绕 X 轴翻转使圆环俯仰，绕 Z 轴旋转使视角偏转 */
+.orbitTilt {
+  transform-style: preserve-3d;
+  transform:
+    rotateX(-22deg)
+    rotateZ(10deg);
 }
 
 .orbitStage {
   width: 0;
   height: 0;
-  transform-style: preserve-3d;
-  animation: orbitRevolution 30s linear infinite;
   position: relative;
+  transform-style: preserve-3d;
+  /* 往下移，给视频中央让位 */
+  transform: translateY(48px);
 }
 
-/* 公转：绕 Y 轴 360° 缓慢旋转 */
-@keyframes orbitRevolution {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-/* ---- 轨道上的单张卡牌 ---- */
+/* ---- 轨道卡牌 ---- */
 
 .orbitCard {
   position: absolute;
@@ -104,11 +105,16 @@
   left: 0;
   border-radius: 10px;
   overflow: hidden;
-  backface-visibility: hidden;
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.5),
-    0 0 20px rgba(74, 144, 217, 0.06);
+  will-change: transform, opacity, filter;
   border: 1px solid rgba(255, 255, 255, 0.06);
+  backface-visibility: visible;
+}
+
+/* 真实卡牌：有光泽边框 */
+.orbitCard:not(.placeholderCard) {
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(74, 144, 217, 0.05);
 }
 
 .orbitCardImg {
@@ -123,13 +129,24 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 8px 10px;
-  font-size: 11px;
+  padding: 6px 8px;
+  font-size: 10px;
   font-weight: 500;
-  color: #fff;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
+  color: rgba(255, 255, 255, 0.8);
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
   text-align: center;
   letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 占位卡牌：空心玻璃效果 */
+.placeholderCard {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* ---- 滚动箭头 ---- */
