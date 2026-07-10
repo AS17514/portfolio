@@ -68,11 +68,11 @@ export default function Hero() {
         const zPos = Math.cos(rad)
         const isPlaceholder = card.classList.contains(styles.placeholderCard)
 
-        // 真实卡牌: 0.35~0.95 | 占位卡: 0.25~0.50（始终可见）
+        // 真实卡牌: 0.55~1.0 | 占位卡: 0.30~0.50
         const opacity = isPlaceholder
-          ? 0.20 + ((zPos + 1) / 2) * 0.30
-          : 0.35 + ((zPos + 1) / 2) * 0.60
-        const scale = 0.85 + ((zPos + 1) / 2) * 0.25
+          ? 0.30 + ((zPos + 1) / 2) * 0.20
+          : 0.55 + ((zPos + 1) / 2) * 0.45
+        const scale = 0.90 + ((zPos + 1) / 2) * 0.15
 
         card.style.transform = `
           rotateY(${cardAngle}deg)
@@ -80,7 +80,8 @@ export default function Hero() {
           scale(${scale})
         `
         card.style.opacity = opacity
-        card.style.filter = `blur(${(1 - scale) * 5}px)`
+        // 只有占位卡才加模糊，真实卡牌始终清晰
+        card.style.filter = isPlaceholder ? `blur(${(1 - scale) * 4}px)` : 'none'
       }
 
       requestAnimationFrame(tick)
@@ -121,9 +122,16 @@ export default function Hero() {
                 <div
                   key={card.id}
                   className={`${styles.orbitCard} ${card.isPlaceholder ? styles.placeholderCard : ''}`}
+                  style={{
+                    width: CARD_W,
+                    height: CARD_H,
+                    marginLeft: -CARD_W / 2,
+                    marginTop: -CARD_H / 2,
+                  }}
                 >
                   {!card.isPlaceholder ? (
                     <>
+                      <div className={styles.realCardAccent} />
                       <img
                         src={card.poster || '/portfolio/images/poster.png'}
                         alt={card.title}
