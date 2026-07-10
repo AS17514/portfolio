@@ -2,9 +2,6 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 
@@ -29,12 +26,20 @@
 .content {
   position: relative;
   z-index: 1;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
   gap: 32px;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+}
+
+.content:active {
+  cursor: grabbing;
 }
 
 /* ---- 中心文字 ---- */
@@ -46,6 +51,7 @@
   position: relative;
   z-index: 3;
   margin-top: 40px;
+  pointer-events: none;
 }
 
 .title {
@@ -80,7 +86,7 @@
   pointer-events: none;
 }
 
-/* 轨道倾斜：绕 X 轴翻转使圆环俯仰，绕 Z 轴旋转使视角偏转 */
+/* 轨道倾斜 */
 .orbitTilt {
   transform-style: preserve-3d;
   transform:
@@ -93,7 +99,6 @@
   height: 0;
   position: relative;
   transform-style: preserve-3d;
-  /* 往下移，给视频中央让位 */
   transform: translateY(48px);
 }
 
@@ -108,9 +113,9 @@
   will-change: transform, opacity, filter;
   border: 1px solid rgba(255, 255, 255, 0.06);
   backface-visibility: visible;
+  pointer-events: none;
 }
 
-/* 真实卡牌：有光泽边框 */
 .orbitCard:not(.placeholderCard) {
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.4),
@@ -141,7 +146,7 @@
   text-overflow: ellipsis;
 }
 
-/* 占位卡牌：空心玻璃效果 */
+/* 占位卡牌 */
 .placeholderCard {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -156,14 +161,15 @@
   bottom: 48px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1;
+  z-index: 2;
   background: none;
   border: none;
   color: var(--color-text-dim);
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   animation: float 2s ease-in-out infinite;
   transition: color 0.2s;
+  padding: 12px;
 }
 
 .scroll:hover {

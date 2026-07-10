@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { FaChevronDown } from 'react-icons/fa'
 import projects from '../../data/projects.json'
 import styles from './Hero.module.css'
@@ -7,8 +7,10 @@ const ORBIT_RADIUS = 280
 const CARD_W = 140
 const CARD_H = 210
 const TOTAL_DISPLAY = 5
+const BASE_SPEED = 0.10 // 默认旋转速度 (deg/frame)
+const MAX_SPEED = 0.50  // 拖拽最高速度
+const DRAG_FACTOR = 0.25 // 拖拽灵敏度
 
-// 组装卡牌：真实项目 + 空占位
 const cardData = []
 for (let i = 0; i < TOTAL_DISPLAY; i++) {
   if (i < projects.length) {
@@ -20,24 +22,55 @@ for (let i = 0; i < TOTAL_DISPLAY; i++) {
 
 export default function Hero() {
   const stageRef = useRef(null)
+  const angleRef = useRef(0)
+  const speedRef = useRef(BASE_SPEED)
+  const isDragging = useRef(false)
+  const lastX = useRef(0)
 
+  // ---- 拖拽交互 ----
+  const handlePointerDown = useCallback((e) => {
+    isDragging.current = true
+    lastX.current = e.clientX
+  }, [])
+
+  const handlePointerMove = useCallback((e) => {
+    if (!isDragging.current) return
+    const dx = e.clientX - lastX.current
+    speedRef.current = BASE_SPEED + (-dx * DRAG_FACTOR)
+    speedRef.current = Math.max(-MAX_SPEED, Math.min(MAX_SPEED, speedRef.current))
+    lastX.current = e.clientX
+  }, [])
+
+  const handlePointerUp = useCallback(() => {
+    isDragging.current = false
+  }, [])
+
+  // ---- 动画循环 ----
   useEffect(() => {
     const stage = stageRef.current
     if (!stage) return
-    let angle = 0
     let running = true
 
     const tick = () => {
       if (!running) return
-      angle = (angle + 0.12) % 360
+
+      // 松手后平滑回归默认速度
+      if (!isDragging.current) {
+        speedRef.current += (BASE_SPEED - speedRef.current) * 0.04
+        if (Math.abs(speedRef.current - BASE_SPEED) < 0.002) {
+          speedRef.current = BASE_SPEED
+        }
+      }
+
+      angleRef.current = (angleRef.current + speedRef.current) % 360
 
       for (let i = 0; i < stage.children.length; i++) {
         const card = stage.children[i]
-        const cardAngle = angle + (360 / TOTAL_DISPLAY) * i
+        const cardAngle = angleRef.current + (360 / TOTAL_DISPLAY) * i
         const rad = (cardAngle * Math.PI) / 180
-        const zPos = Math.cos(rad) // +1 = 最前, -1 = 最后
-        const opacity = 0.08 + ((zPos + 1) / 2) * 0.42 // 0.08 ~ 0.50
-        const scale = 0.85 + ((zPos + 1) / 2) * 0.25 // 0.85 ~ 1.10
+        const zPos = Math.cos(rad)
+        const opacity = 0.20 + ((zPos + 1) / 2) * 0.65
+        const scale = 0.85 + ((zPos + 1) / 2) * 0.25
 
         card.style.transform = `
           rotateY(${cardAngle}deg)
@@ -71,8 +104,16 @@ export default function Hero() {
         playsInline
       />
       <div className={styles.overlay} />
-      <div className={styles.content}>
-        {/* ⭕ 行星环轨道 */}
+
+      {/* 拖动事件挂在 content 上，用户拖 Hero 任意位置都能转 */}
+      <div
+        className={styles.content}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
+      >
+        {/* 行星环轨道 */}
         <div className={styles.orbitRing}>
           <div className={styles.orbitTilt}>
             <div className={styles.orbitStage} ref={stageRef}>
@@ -97,15 +138,16 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* 📍 中心文字 */}
+        {/* 中心文字 */}
         <div className={styles.centerColumn}>
           <h1 className={styles.title}>AS</h1>
           <p className={styles.subtitle}>游戏程序 / 技术美术</p>
         </div>
+
+        <button className={styles.scroll} onClick={scrollToAbout}>
+          <FaChevronDown />
+        </button>
       </div>
-      <button className={styles.scroll} onClick={scrollToAbout}>
-        <FaChevronDown />
-      </button>
     </section>
   )
 }
